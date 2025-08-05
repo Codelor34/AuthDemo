@@ -12,6 +12,11 @@
             <div class="card-body">
                 <form asp-action="Create" asp-controller="MauSac" asp-area="NhanVien" method="post">
                     <div class="form-group">
+                        <label asp-for="MaMau" class="form-label fw-bold">mã màu sắc</label>
+                        <input asp-for="MaMau" class="form-control rounded-3" placeholder="Nhập tên màu sắc..." />
+                        <span asp-validation-for="TenMau" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
                         <label asp-for="TenMau" class="form-label fw-bold">Tên màu sắc</label>
                         <input asp-for="TenMau" class="form-control rounded-3" placeholder="Nhập tên màu sắc..." />
                         <span asp-validation-for="TenMau" class="text-danger"></span>
