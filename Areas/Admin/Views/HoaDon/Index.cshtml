@@ -1,0 +1,82 @@
+@model IEnumerable<AuthDemo.Models.ViewModels.GetAllHoaDonVM>
+@{
+    ViewData["Title"] = "Danh sách hóa đơn";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="mdi mdi-file-document-box"></i> Danh sách hóa đơn</h4>
+        <a class="btn btn-primary" href="#">
+            <i class="mdi mdi-plus"></i> Thêm hóa đơn
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Mã hóa đơn</th>
+                        <th>Khách hàng</th>
+                        <th>SĐT</th>
+                        <th>Email</th>
+                        <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
+                        <th>Hình thức thanh toán</th>
+                        <th>Hình thức vận chuyển</th>
+                        <th>Tổng tiền</th>
+                        <th>Người tạo</th>
+                        <th>Ngày tạo</th>
+                        <th>Người cập nhật</th>
+                        <th>Ngày cập nhật</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.HoaDonID</td>
+                        <td>@item.TenKhachHang</td>
+                        <td>@item.SoDienThoai</td>
+                        <td>@item.Email</td>
+                        <td>@item.DiaChi</td>
+                        <td><span class="badge bg-info">@item.TrangThaiDisplay</span></td>
+                        <td>@item.HinhThucThanhToanDisplay</td>
+                        <td>@item.HinhThucVanChuyenDisplay</td>
+                        <td><span class="badge bg-success">@item.TongTien.ToString("N0")</span></td>
+                        <td>@item.NguoiTao</td>
+                        <td>
+                            @if (item.NgayTao.HasValue)
+                            {
+                                <span class="badge bg-light text-dark px-2 py-1 rounded-2 shadow-sm">
+                                    @item.NgayTao.Value.ToString("HH:mm dd/MM/yyyy")
+                                </span>
+                            }
+                        </td>
+                        <td>@item.NguoiCapNhat</td>
+                        <td>
+                            @if (item.NgayCapNhat.HasValue)
+                            {
+                                <span class="badge bg-light text-dark px-2 py-1 rounded-2 shadow-sm">
+                                    @item.NgayCapNhat.Value.ToString("HH:mm dd/MM/yyyy")
+                                </span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-info btn-sm me-1" href="#">
+                                <i class="mdi mdi-eye"></i> Xem
+                            </a>
+                            <a class="btn btn-warning btn-sm me-1" href="#">
+                                <i class="mdi mdi-pencil"></i> Sửa
+                            </a>
+                            <a class="btn btn-danger btn-sm" href="#" onclick="return confirm('Bạn có chắc muốn xóa?');">
+                                <i class="mdi mdi-delete"></i> Xóa
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 

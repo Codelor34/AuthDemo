@@ -1,0 +1,36 @@
+@model AuthDemo.Models.ThuongHieu
+@{
+    ViewData["Title"] = "Thêm hãng sản xuất";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="mdi mdi-plus"></i> Thêm hãng sản xuất</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" asp-controller="ThuongHieu" asp-area="Admin" method="post">
+                    <div class="form-group">
+                        <label asp-for="MaThuongHieuCode" class="form-label fw-bold">Mã thương hiệu</label>
+                        <input asp-for="MaThuongHieuCode" class="form-control" />
+                        <span asp-validation-for="MaThuongHieuCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TenThuongHieu" class="form-label fw-bold">Tên hãng sản xuất</label>
+                        <input asp-for="TenThuongHieu" class="form-control" />
+                        <span asp-validation-for="TenThuongHieu" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="mdi mdi-content-save"></i> Lưu
+                        </button>
+                        <a class="btn btn-secondary px-4" href="@Url.Action("Index", "ThuongHieu", new { area = "Admin" })">
+                            <i class="mdi mdi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

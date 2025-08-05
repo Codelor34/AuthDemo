@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AuthDemo</title>
+    <!-- PurpleAdmin CSS -->
+    <link rel="stylesheet" href="/assets/vendors/css/vendor.bundle.base.css" />
+    <link rel="stylesheet" href="/assets/vendors/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="shortcut icon" href="/assets/images/favicon.png" />
+    <link rel="stylesheet" href="/assets/vendors/mdi/css/materialdesignicons.min.css">
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div class="container-scroller">
+        @await Html.PartialAsync("_Navbar")
+        <div class="container-fluid page-body-wrapper">
+            @await Html.PartialAsync("_Sidebar")
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    @RenderBody()
+                </div>
+                @await Html.PartialAsync("_Footer")
+            </div>
+        </div>
+    </div>
+    <!-- PurpleAdmin JS -->
+    <script src="/assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="/assets/js/off-canvas.js"></script>
+    <script src="/assets/js/misc.js"></script>
+    <script src="/assets/js/dashboard.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,54 @@
+@model IEnumerable<AuthDemo.Models.KichThuoc>
+@{
+    ViewData["Title"] = "Danh sách size";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="mdi mdi-cube-outline"></i> Danh sách size</h4>
+        <a class="btn btn-primary" href="@Url.Action("Create", "KichThuoc", new { area = "Admin" })">
+            <i class="mdi mdi-plus"></i> Thêm size
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tên size</th>
+                        <th>Mã size</th>
+                        <th>Người tạo</th>
+                        <th>Ngày tạo</th>
+                        <th>Người sửa</th>
+                        <th>Ngày sửa</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.TenKichThuoc</td>
+                            <td>@item.MaKichThuocCode</td>
+                            <td>@item.NguoiTao</td>
+                            <td>@(item.NgayTao.HasValue ? item.NgayTao.Value.ToString("dd/MM/yyyy HH:mm") : "")</td>
+                            <td>@item.NguoiCapNhat</td>
+                            <td>@(item.NgayCapNhat.HasValue ? item.NgayCapNhat.Value.ToString("dd/MM/yyyy HH:mm") : "")</td>
+                            <td class="text-center">
+                                <a class="btn btn-warning btn-sm"
+                                    href="@Url.Action("Edit", "KichThuoc", new { id = item.SizeID, area = "Admin" })">
+                                    <i class="mdi mdi-pencil"></i> Sửa
+                                </a>
+                                <a class="btn btn-danger btn-sm"
+                                    href="@Url.Action("Delete", "KichThuoc", new { id = item.SizeID, area = "Admin" })"
+                                    onclick="return confirm('Bạn có chắc muốn xóa?');">
+                                    <i class="mdi mdi-delete"></i> Xóa
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

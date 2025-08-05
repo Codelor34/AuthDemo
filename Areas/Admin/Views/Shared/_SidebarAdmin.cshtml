@@ -1,0 +1,140 @@
+<nav class="sidebar sidebar-offcanvas position-relative" id="sidebar">
+  <!-- Thông tin user login -->
+  <div class="sidebar-user-info text-center py-4">
+    <img src="https://ui-avatars.com/api/?name=@(Context.Session.GetString("TenDangNhap") ?? "User")&background=6f42c1&color=fff&size=64" class="rounded-circle mb-2" width="64" height="64" alt="User Avatar">
+    <div class="fw-bold">@(Context.Session.GetString("TenDangNhap") ?? "User")</div>
+    <div class="text-muted small">@((Context.Session.GetString("VaiTro") ?? "Vai trò"))</div>
+  </div>
+  <ul class="nav mb-5">
+    <li class="nav-item">
+      <a class="nav-link fw-bold text-dark d-flex align-items-center position-relative" href="~/Admin/HomeAdmin/Dashboard">
+        <span class="sidebar-icon-left position-absolute start-0 ps-3"><i class="mdi mdi-view-dashboard menu-icon text-primary"></i></span>
+        <span class="menu-title w-100 text-center">Thống Kê</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link fw-bold text-dark d-flex align-items-center position-relative" data-bs-toggle="collapse" href="#product-management" aria-expanded="false" aria-controls="product-management">
+        <span class="sidebar-icon-left position-absolute start-0 ps-3"><i class="mdi mdi-cube-outline menu-icon text-primary"></i></span>
+        <span class="menu-title w-100 text-center">Quản lý sản phẩm</span>
+        <i class="menu-arrow ms-auto"></i>
+      </a>
+      <div class="collapse" id="product-management">
+        <ul class="nav flex-column sub-menu ms-4">
+          <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Giay", new { area = "Admin" })">
+              <i class="mdi mdi-cube menu-icon"></i>
+              <span class="menu-title">Sản phẩm</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "ChiTietGiay", new { area = "Admin" })">
+              <i class="mdi mdi-view-list menu-icon"></i>
+              <span class="menu-title">Sản phẩm chi tiết</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "ThuongHieu", new { area = "Admin" })">
+              <i class="mdi mdi-factory menu-icon"></i>
+              <span class="menu-title">Thương hiệu</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "ChatLieu", new { area = "Admin" })">
+              <i class="mdi mdi-layers menu-icon"></i>
+              <span class="menu-title">Chất liệu</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "MauSac", new { area = "Admin" })">
+              <i class="mdi mdi-palette menu-icon"></i>
+              <span class="menu-title">Màu sắc</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "KichThuoc", new { area = "Admin" })">
+              <i class="mdi mdi-format-size menu-icon"></i>
+              <span class="menu-title">Kích thước</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link fw-bold text-dark d-flex align-items-center position-relative" href="~/Admin/HoaDon/Index">
+        <span class="sidebar-icon-left position-absolute start-0 ps-3"><i class="mdi mdi-clipboard-text menu-icon text-success"></i></span>
+        <span class="menu-title w-100 text-center">Quản lý hóa đơn</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link fw-bold text-dark d-flex align-items-center position-relative" href="~/Admin/UserManager/Index">
+        <span class="sidebar-icon-left position-absolute start-0 ps-3"><i class="mdi mdi-account-group menu-icon text-primary"></i></span>
+        <span class="menu-title w-100 text-center">Quản lý tài khoản</span>
+      </a>
+    </li>
+  </ul>
+
+    
+
+  <!-- Nút đăng xuất cố định dưới cùng -->
+  <div class="sidebar-logout text-center py-4 position-absolute w-100" style="bottom:0;left:0;background:#fff;border-top:1px solid #eee;">
+    <a href="~/Account/Logout" class="btn btn-outline-danger w-75 d-flex align-items-center justify-content-center mx-auto">
+      <i class="mdi mdi-logout me-2"></i> Đăng xuất
+    </a>
+  </div>
+</nav>
+<style>
+  /* Loại bỏ mũi tên ở các item con */
+  @* #sidebar .nav .nav-item .nav-link:before {
+    content: none !important;
+  } *@
+  .sidebar .nav-link {
+    min-height: 44px;
+    padding-left: 2.5rem !important;
+    padding-right: 1rem !important;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    margin-bottom: 4px;
+  }
+  .sidebar .nav-link .menu-icon {
+    font-size: 20px;
+    margin-right: 12px;
+    color: #6f42c1;
+    min-width: 24px;
+    text-align: center;
+  }
+  .sidebar .nav-link .menu-title {
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+    margin-left: 4px;
+  }
+  .sidebar .nav-link:hover, .sidebar .nav-link.active {
+    background: #f3f0fa;
+    color: #6f42c1 !important;
+  }
+  .sidebar .nav-link:hover .menu-title,
+  .sidebar .nav-link.active .menu-title {
+    color: #6f42c1;
+  }
+  .sidebar .nav-link:hover .menu-icon,
+  .sidebar .nav-link.active .menu-icon {
+    color: #4b2996; 
+  }
+  .sidebar .sub-menu .nav-link {
+    padding-left: 0.8rem !important;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .sidebar .sub-menu .menu-icon {
+    font-size: 17px;
+    color: #b197fc;
+  }
+  #sidebar .nav .nav-link,
+  #sidebar .nav .nav-link .menu-title {
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>

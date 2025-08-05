@@ -1,0 +1,399 @@
+@using AuthDemo.Models.ViewModels
+@{
+    ViewData["Title"] = "Bán hàng tại quầy";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var cartItems = (IEnumerable<CartItemDisplayVM>)ViewBag.CartItems ?? new List<CartItemDisplayVM>();
+    var tuVanList = (IEnumerable<AuthDemo.Models.ViewModels.BanHangTaiQuayVM>)ViewBag.TuVanSanPham ?? new List<AuthDemo.Models.ViewModels.BanHangTaiQuayVM>();
+}
+<div class="container-fluid mt-3">
+    <div class="row flex-lg-nowrap flex-wrap" style="min-height: 80vh;">
+        <!-- Phần trái -->
+        <div class="col-lg-8 col-12 d-flex flex-column mb-3">
+            <!-- Tìm kiếm -->
+            <div class="card mb-3 p-3">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2 bhq-search-wrapper" style="position: relative;">
+                    <div style="flex-grow:1; position:relative;">
+                        <input id="search-input" type="text" placeholder="Tìm sản phẩm..." class="form-control" autocomplete="off" />
+                        <div id="search-dropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;"></div>
+                    </div>
+                    <button class="btn btn-primary"><i class="mdi mdi-magnify"></i> Tìm</button>
+                </div>
+            </div>
+
+            <!-- Giỏ hàng -->
+            <div class="card mb-3 p-3">
+                <div class="fw-bold mb-2">Giỏ hàng</div>
+                <div class="table-responsive bhq-cart-table">
+                    <table class="table table-bordered rounded shadow-sm align-middle">
+                        <thead class="table-light">
+                            <tr class="text-center fw-bold">
+                                <th class="bhq-cart-product">Sản phẩm</th>
+                                <th class="bhq-cart-qty">Số lượng</th>
+                                <th class="bhq-cart-prices">Đơn giá</th>
+                                <th class="bhq-cart-total">Thành tiền</th>
+                                <th class="bhq-cart-reason">Lý do giảm giá</th>
+                                <th class="bhq-cart-action"></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @if (cartItems.Any()) {
+                            foreach (var item in cartItems) {
+                                <tr data-cartdetailid="@item.CartDetailID" data-gia-goc="@item.GiaGoc" data-gia-sau-giam="@item.GiaSauGiam" data-so-luong="@item.SoLuong" data-tangkem="@(item.IsTangKem ? "1" : "0")" data-chietkhau-phantram="@item.ChietKhauPhanTram" data-chietkhau-tienmat="@item.ChietKhauTienMat">
+                                    <td class="bhq-cart-product">
+                                        @item.TenSanPham
+                                        <small class="text-muted d-block">@item.MauSac, Size: @item.KichThuoc</small>
+                                    </td>
+                                    <td class="bhq-cart-qty text-center">
+                                        <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post" class="d-inline">
+                                            <input type="hidden" name="shoeDetailId" value="@item.ShoeDetailID" />
+                                            <input type="hidden" name="actionType" value="decrease" />
+                                            <button class="btn btn-outline-secondary btn-sm bhq-btn-qty">-</button>
+                                        </form>
+                                        <span class="mx-2">@item.SoLuong</span>
+                                        <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post" class="d-inline">
+                                            <input type="hidden" name="shoeDetailId" value="@item.ShoeDetailID" />
+                                            <input type="hidden" name="actionType" value="increase" />
+                                            <button class="btn btn-outline-secondary btn-sm bhq-btn-qty">+</button>
+                                        </form>
+                                    </td>
+                                    <td class="bhq-cart-price text-end">
+                                        <span class="fw-bold">@item.GiaGoc.ToString("N0")</span> VNĐ
+                                    </td>
+                                    <!-- Thành tiền sẽ do js xử lý, không render Razor ở đây -->
+                                    <td class="thanh-tien-dong bhq-cart-total text-end fw-bold"></td>
+
+                                    <td class="bhq-cart-reason text-muted small text-center">@item.LyDo</td>
+                                    <td class="bhq-cart-action">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm ms-1 bhq-btn-discount" title="Chiết khấu/Tặng" data-cartid="@item.CartDetailID">🎁 %</button>
+                                    </td>
+                                    
+                                </tr>
+                            }
+                        } else {
+                            <tr><td colspan="5" class="text-center text-muted">Chưa có sản phẩm trong giỏ.</td></tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-end mt-2 ">
+                    <strong >Tổng tiền: </strong>
+                    <span class="text-danger fw-bold ms-2 " id="tong-tien-giohang"></span>
+                </div>
+            </div>
+
+            <!-- Danh sách sản phẩm -->
+            <div class="card p-3">
+                <div class="fw-bold mb-2">Danh sách sản phẩm</div>
+                <div class="row g-2">
+                @if (!tuVanList.Any()) {
+                    <div class="col-12 text-muted">Không có sản phẩm.</div>
+                } else {
+                    foreach (var sp in tuVanList) {
+                            var cartItem = cartItems.FirstOrDefault(x => x.ShoeDetailID == sp.ShoeDetailID);
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                <div class="product-card">
+                                <div><strong>@sp.TenSp</strong></div>
+                                    <div class="text-success">@sp.Gia.ToString("N0") VNĐ</div>
+                                <div class="text-muted">Màu: @sp.MauSac | Size: @sp.KichThuoc</div>
+                                <div class="text-muted">@sp.ThuongHieu - @sp.ChatLieu</div>
+                                <div class="text-muted">@sp.DanhMuc</div>
+                                @if (cartItem != null) {
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary">Số lượng: @cartItem.SoLuong</span>
+                                        <div class="d-flex gap-1 mt-2 flex-wrap">
+                                            <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post">
+                                                <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
+                                                <input type="hidden" name="actionType" value="decrease" />
+                                                <button class="btn btn-outline-secondary btn-sm">-</button>
+                                            </form>
+                                            <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post">
+                                                <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
+                                                <input type="hidden" name="actionType" value="increase" />
+                                                <button class="btn btn-outline-secondary btn-sm">+</button>
+                                            </form>
+                                            <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post">
+                                                <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
+                                                <input type="hidden" name="actionType" value="remove" />
+                                                <button class="btn btn-outline-danger btn-sm">Xóa</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                } else {
+                                        <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post" class="mt-2">
+                                            <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
+                                            <input type="hidden" name="actionType" value="add" />
+                                        <button class="btn btn-outline-primary btn-sm w-100">Chọn</button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Phần phải -->
+        <div class="col-lg-4 col-12">
+            <div class="card p-3 h-100 bhq-invoice-card">
+                <div class="fw-bold mb-2">Hóa đơn</div>
+                <div class="bhq-invoice-content">
+                    <div class="mb-2 position-relative">
+                        <input id="search-khachhang" type="text" class="form-control" placeholder="(F4) SĐT, tên khách hàng..." autocomplete="off" />
+                        <input type="hidden" id="selected-khachhang-id" name="KhachHangID" />
+                        <div id="dropdown-khachhang" class="dropdown-menu" style="width:100%; max-height:250px; overflow-y:auto;"></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span id="nguoinhan-summary" class="text-primary" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#nguoinhanModal">
+                                <i class="mdi mdi-account-card-details"></i> Thông tin người nhận <span class="text-muted small">(bấm để xem/sửa)</span>
+                            </span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary w-100 mb-2" id="btn-modal-giamgia">
+                        <i class="mdi mdi-sale"></i> Giảm giá hóa đơn
+                    </button>
+                    <div id="giamgia-summary" class="mt-2 text-success small"></div>
+                    <!-- Tóm tắt phép tính hóa đơn -->
+                    <div class="card shadow-sm border-0 mb-3 mt-2" style="background: #f8fafc;">
+                        <div class="card-body py-2 px-3">
+                            <div class="fw-bold mb-2" style="font-size:1.05em;"><i class="mdi mdi-calculator-variant-outline"></i> Tóm tắt hóa đơn</div>
+                            <div class="row mb-1 align-items-center">
+                                <div class="col-7 text-muted">Tổng giá gốc</div>
+                                <div class="col-5 text-end"><span id="hd-tong-gia-goc">0</span> <span class="text-secondary">VNĐ</span></div>
+                            </div>
+                            <div class="row mb-1 align-items-center">
+                                <div class="col-7 text-muted">Tổng giảm giá theo sản phẩm</div>
+                                <div class="col-5 text-end text-success">-<span id="hd-tong-giam-gia-sp">0</span> <span class="text-secondary">VNĐ</span></div>
+                            </div>
+                            <div class="row mb-1 align-items-center">
+                                <div class="col-7 text-muted">Giảm giá hóa đơn</div>
+                                <div class="col-5 text-end text-success">-<span id="hd-giam-gia-hoa-don">0</span> <span class="text-secondary">VNĐ</span></div>
+                            </div>
+                            <div class="row mb-1 align-items-center">
+                                <div class="col-7 text-muted">Phí vận chuyển</div>
+                                <div class="col-5 text-end text-danger">+<span id="hd-phi-van-chuyen">0</span> <span class="text-secondary">VNĐ</span></div>
+                            </div>
+                            <div class="row align-items-center mt-2 pt-1 border-top">
+                                <div class="col-7 fw-bold">Thành tiền</div>
+                                <div class="col-5 text-end fw-bold text-primary" style="font-size:1.15em;"><span id="hd-thanh-tien">0</span> VNĐ</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Select box phương thức thanh toán và vận chuyển -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-12">
+                            <label class="form-label fw-bold mb-1">Phương thức thanh toán</label>
+                            <select class="form-select" id="phuongthuc-thanh-toan" name="PhuongThucThanhToan">
+                                @foreach (var item in ViewBag.PhuongThucThanhToanList)
+                                {
+                                    <option value="@item.Value">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label class="form-label fw-bold mb-1">Phương thức vận chuyển</label>
+                            <select class="form-select" id="phuongthuc-van-chuyen" name="PhuongThucVanChuyen">
+                                @foreach (var item in ViewBag.PhuongThucVanChuyenList)
+                                {
+                                    <option value="@item.Value">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-2 bhq-invoice-footer">
+                    <div>
+                        <strong>Tổng tiền: </strong>
+                        <span class="text-danger fw-bold" id="tong-tien-hd"> </span>
+                        <br />
+                        <span id="giam-gia-info" class="text-success small"></span>
+                        <br />
+                        <strong>Thành tiền sau giảm: </strong>
+                        <span class="text-primary fw-bold" id="thanh-tien-sau-giam"></span>
+                    </div>
+                    <button class="btn btn-success"><i class="mdi mdi-cash-multiple"></i> Thanh toán</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Form ẩn để thêm sản phẩm vào giỏ hàng từ dropdown tìm kiếm -->
+    <form id="add-to-cart-form" action="/Admin/BanHangTaiQuay/UpdateCart" method="post" style="display:none;">
+        <input type="hidden" name="shoeDetailId" id="hidden-shoeDetailId" />
+        <input type="hidden" name="actionType" value="add" />
+    </form>
+</div>
+
+<!-- Modal chiết khấu/tặng sản phẩm -->
+<div class="modal fade" id="discountModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Khuyến mại khác</h5>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-danger" style="font-size: 0.95em;">* Nếu để trống sẽ reset lại giảm giá</div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" id="discount-tangkem" />
+          <label class="form-check-label" for="discount-tangkem">Tặng sản phẩm này</label>
+        </div>
+        <label class="form-label mb-1">Khuyến mại theo</label>
+        <div class="btn-group mb-2" role="group">
+            <button type="button" class="btn btn-toggle-type btn-primary" data-type="percent">%</button>
+            <button type="button" class="btn btn-toggle-type btn-outline-primary" data-type="amount">VNĐ</button>
+        </div>
+        <input type="number" class="form-control form-control-sm mb-2" id="discount-value" min="0" value="0" />
+        <label class="form-label mb-1">Đề xuất</label>
+        <div class="btn-group mb-2" role="group">
+            <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="10">10%</button>
+            <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="20">20%</button>
+            <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="30">30%</button>
+            <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="50">50%</button>
+        </div>
+        <label class="form-label mb-1">Lý do khuyến mại <span class="text-danger">*</span></label>
+        <input type="text" class="form-control form-control-sm" id="discount-reason" placeholder="Nhập lý do ..." />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btn-save-discount">Đồng ý</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal thông tin người nhận -->
+<div class="modal fade" id="nguoinhanModal" tabindex="-1" aria-labelledby="nguoinhanModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nguoinhanModalLabel">Thông tin người nhận</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-2">
+          <div class="col-6">
+            <input id="nguoinhan-ten" name="NguoiNhanTen" type="text" class="form-control" placeholder="Tên người nhận" />
+          </div>
+          <div class="col-6">
+            <input id="nguoinhan-sdt" name="NguoiNhanSDT" type="text" class="form-control" placeholder="SĐT người nhận" />
+          </div>
+          <div class="col-6">
+            <input id="nguoinhan-email" name="NguoiNhanEmail" type="email" class="form-control" placeholder="Email người nhận" />
+          </div>
+          <div class="col-6">
+            <input id="nguoinhan-diachi" name="NguoiNhanDiaChi" type="text" class="form-control" placeholder="Địa chỉ nhận hàng" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Lưu</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal giảm giá hóa đơn -->
+<div class="modal fade" id="giamgiaModal" tabindex="-1" aria-labelledby="giamgiaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="giamgiaModalLabel">Giảm giá hóa đơn</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-danger" style="font-size: 0.95em;">* Reset trang sẽ làm mới lại giảm giá</div>
+        <label class="form-label mb-1">Giảm giá theo</label>
+        <div class="btn-group mb-2 w-100" role="group">
+            <button type="button" class="btn btn-toggle-type-giamgia btn-primary w-50" data-type="percent">%</button>
+            <button type="button" class="btn btn-toggle-type-giamgia btn-outline-primary w-50" data-type="amount">VNĐ</button>
+        </div>
+        <input type="number" class="form-control form-control-sm mb-2" id="modal-giamgia-value" min="0" value="0" />
+        <label class="form-label mb-1">Đề xuất</label>
+        <div class="btn-group mb-2 w-100" role="group">
+            <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="10">10%</button>
+            <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="20">20%</button>
+            <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="30">30%</button>
+            <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="50">50%</button>
+        </div>
+        <label class="form-label mb-1">Lý do giảm giá</label>
+        <input type="text" class="form-control form-control-sm" id="modal-lydo-giamgia" placeholder="Nhập lý do ..." />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btn-save-giamgia" >Lưu</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module" src="~/js/banhangtaiquay.js"></script>
+    <!-- Thư viện Select2 cho select đẹp + icon -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#phuongthuc-thanh-toan').select2({
+        width: '100%',
+        templateResult: function (state) {
+            if (!state.id) return state.text;
+            let icon = '';
+            switch (parseInt(state.id)) {
+                case 0: icon = '<i class="mdi mdi-cash me-1"></i>'; break; // Tiền mặt
+                case 1: icon = '<i class="mdi mdi-bank-transfer me-1"></i>'; break; // Chuyển khoản
+                case 2: icon = '<i class="mdi mdi-credit-card me-1"></i>'; break; // Thẻ tín dụng
+                case 3: icon = '<i class="mdi mdi-cellphone me-1"></i>'; break; // Ví điện tử
+            }
+            return $('<span>' + icon + state.text + '</span>');
+        },
+        templateSelection: function (state) {
+            if (!state.id) return state.text;
+            let icon = '';
+            switch (parseInt(state.id)) {
+                case 0: icon = '<i class="mdi mdi-cash me-1"></i>'; break;
+                case 1: icon = '<i class="mdi mdi-bank-transfer me-1"></i>'; break;
+                case 2: icon = '<i class="mdi mdi-credit-card me-1"></i>'; break;
+                case 3: icon = '<i class="mdi mdi-cellphone me-1"></i>'; break;
+            }
+            return $('<span>' + icon + state.text + '</span>');
+        },
+        escapeMarkup: function (m) { return m; }
+    });
+    $('#phuongthuc-van-chuyen').select2({
+        width: '100%',
+        templateResult: function (state) {
+            if (!state.id) return state.text;
+            let icon = '';
+            switch (parseInt(state.id)) {
+                case 0: icon = '<i class="mdi mdi-truck-fast me-1"></i>'; break; // Giao hàng nhanh
+                case 1: icon = '<i class="mdi mdi-package-variant me-1"></i>'; break; // Giao hàng tiết kiệm
+                case 2: icon = '<i class="mdi mdi-store me-1"></i>'; break; // Tự đến lấy
+            }
+            return $('<span>' + icon + state.text + '</span>');
+        },
+        templateSelection: function (state) {
+            if (!state.id) return state.text;
+            let icon = '';
+            switch (parseInt(state.id)) {
+                case 0: icon = '<i class="mdi mdi-truck-fast me-1"></i>'; break;
+                case 1: icon = '<i class="mdi mdi-package-variant me-1"></i>'; break;
+                case 2: icon = '<i class="mdi mdi-store me-1"></i>'; break;
+            }
+            return $('<span>' + icon + state.text + '</span>');
+        },
+        escapeMarkup: function (m) { return m; }
+    });
+});
+</script>
+}
+
+<link rel="stylesheet" href="~/css/banhangtaiquay.css" />
+<link rel="stylesheet" href="~/css/banhangtaiquay-modal.css" />
+<script>
+    window.tongTienGoc = @cartItems.Sum(x => x.GiaSauGiam * x.SoLuong);
+</script>

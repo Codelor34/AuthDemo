@@ -1,0 +1,155 @@
+body {
+    background: linear-gradient(to right, #6DD5ED, #DA70D6); /* Light blue to purple/pink */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Roboto', sans-serif;
+}
+
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+    overflow: hidden;
+    border: none;
+    background-color: #fff; /* Ensure white background for the card */
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Customizing input group to match image */
+.form-group .input-group {
+    border-bottom: 1px solid #ced4da; /* Only bottom border */
+    border-radius: 0;
+    margin-bottom: 20px; /* Space between input fields */
+}
+
+.form-group .input-group .form-control {
+    border: none; /* Remove all borders from input */
+    box-shadow: none; /* Remove shadow on focus */
+    padding-left: 0; /* Align text with icon */
+    background-color: transparent; /* Transparent background */
+    font-size: 1rem;
+}
+
+.form-group .input-group .form-control:focus {
+    border-color: transparent; /* No border on focus */
+    box-shadow: none; /* No shadow on focus */
+}
+
+.form-group .input-group-prepend .input-group-text {
+    background-color: transparent;
+    border: none;
+    padding-right: 10px; /* Space between icon and text */
+    color: #6c757d;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+    display: block; /* Ensure label takes full width */
+}
+
+.gradient-button {
+    background: linear-gradient(to right, #6DD5ED, #DA70D6); /* Matching background gradient */
+    border: none;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Add shadow to button */
+}
+
+.gradient-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.social-login {
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin-top: 20px; /* Space above social login buttons */
+}
+
+.social-login .btn {
+    border-radius: 50%;
+    width: 45px; /* Slightly smaller buttons */
+    height: 45px;
+    display: flex; /* Use flex for icon centering */
+    align-items: center;
+    justify-content: center;
+    margin: 0 8px; /* More spacing between buttons */
+    font-size: 1.1rem; /* Slightly smaller icon */
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1); /* Add shadow to social buttons */
+}
+
+.social-login .btn.facebook {
+    background-color: #3b5998;
+}
+
+.social-login .btn.twitter {
+    background-color: #1DA1F2; /* Brighter Twitter blue */
+}
+
+.social-login .btn.google {
+    background-color: #EA4335;
+}
+
+.text-center a {
+    color: #007bff; /* Keep original link color for "SIGN UP" */
+    text-decoration: none;
+}
+
+.text-center a:hover {
+    text-decoration: underline;
+}
+
+.forgot-password-link {
+    font-size: 0.85rem; /* Slightly smaller font for forgot password */
+    color: #6c757d; /* Make it grey */
+    text-decoration: none;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+/* Adjust margins for "Or Sign Up Using" texts */
+.card-body p.text-center.mb-4 {
+    margin-bottom: 1rem !important; /* Reduce bottom margin */
+    margin-top: 1rem !important; /* Reduce top margin */
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Adjust for the final SIGN UP button */
+.card-body .text-center a.btn-link {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #6DD5ED; /* Matching primary color */
+    text-decoration: none;
+}
+
+.card-body .text-center a.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* General improvements for the form layout */
+.form-group {
+    margin-bottom: 1.5rem; /* Increase space between form groups */
+}
+
+h2 {
+    font-weight: bold;
+    margin-bottom: 2rem !important; /* More space below login title */
+    color: #343a40;
+} 

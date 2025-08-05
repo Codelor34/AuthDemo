@@ -1,0 +1,37 @@
+@model AuthDemo.Models.ChatLieu
+@{
+    ViewData["Title"] = "Sửa chất liệu";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-white d-flex align-items-center">
+                <h4 class="mb-0"><i class="mdi mdi-pencil me-2"></i> Sửa chất liệu</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" asp-controller="ChatLieu" asp-area="Admin" method="post">
+                    <input type="hidden" asp-for="MaterialID" />
+                    <div class="mb-3">
+                        <label asp-for="TenChatLieu" class="form-label fw-bold">Tên chất liệu</label>
+                        <input asp-for="TenChatLieu" class="form-control rounded-3" placeholder="Nhập tên chất liệu..." />
+                        <span asp-validation-for="TenChatLieu" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="MaChatLieuCode" class="form-label fw-bold">Mã chất liệu</label>
+                        <input asp-for="MaChatLieuCode" class="form-control rounded-3" placeholder="Nhập mã chất liệu..." />
+                        <span asp-validation-for="MaChatLieuCode" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="mdi mdi-content-save"></i> Lưu
+                        </button>
+                        <a class="btn btn-secondary px-4" href="@Url.Action("Index", "ChatLieu", new { area = "Admin" })">
+                            <i class="mdi mdi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

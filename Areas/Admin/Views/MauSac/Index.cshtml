@@ -1,0 +1,50 @@
+@model IEnumerable<AuthDemo.Models.MauSac>
+@{
+    ViewData["Title"] = "Danh sách màu sắc";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="mdi mdi-cube-outline"></i> Danh sách màu sắc</h4>
+        <a class="btn btn-primary" href="@Url.Action("Create", "MauSac", new { area = "Admin" })">
+            <i class="mdi mdi-plus"></i> Thêm màu
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Mã màu</th>
+                        <th>Tên màu</th>
+                        <th>Ngày tạo</th>
+                        <th>Người tạo</th>
+                        <th>Ngày sửa</th>
+                        <th>Người sửa</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.MaMau</td>
+            <td>@item.TenMau</td>
+            <td>@(item.NgayTao != null ? item.NgayTao.Value.ToString("dd/MM/yyyy HH:mm") : "")</td>
+            <td>@item.NguoiTao</td>
+            <td>@(item.NgayCapNhat != null ? item.NgayCapNhat.Value.ToString("dd/MM/yyyy HH:mm") : "")</td>
+            <td>@item.NguoiCapNhat</td>
+            <td class="text-center">
+                <a class="btn btn-warning btn-sm" href="@Url.Action("Edit", "MauSac", new { id = item.ColorID, area = "Admin" })">
+                    <i class="mdi mdi-pencil"></i> Sửa
+                </a>
+                <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "MauSac", new { id = item.ColorID, area = "Admin" })" onclick="return confirm('Bạn có chắc muốn xóa?');">
+                    <i class="mdi mdi-delete"></i> Xóa
+                </a>
+            </td>
+        </tr>
+    }
+                </tbody>
+            </table>
+    </div>
+</div>

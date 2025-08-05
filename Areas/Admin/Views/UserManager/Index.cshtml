@@ -1,0 +1,86 @@
+@model IEnumerable<AuthDemo.Models.ViewModels.UserWithRoleVM>
+@{
+    ViewData["Title"] = "Quản lý tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var page = (int)(ViewBag.Page ?? 1);
+    var pageSize = (int)(ViewBag.PageSize ?? 10);
+    var total = (int)(ViewBag.Total ?? 0);
+    var search = (string)(ViewBag.Search ?? "");
+    int totalPages = (int)Math.Ceiling((double)total / pageSize);
+}
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="mdi mdi-account-group"></i> Quản lý tài khoản</h4>
+            </div>
+            <div class="card-body">
+                <form method="get" class="form-inline mb-3">
+                    <div class="input-group mr-2">
+                        <input type="text" name="search" value="@search" class="form-control" placeholder="Tìm kiếm tên hoặc quyền..." />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("Create", "UserManager", new { area = "Admin" })" class="btn btn-success ml-2">
+                        <i class="mdi mdi-account-plus"></i> Thêm tài khoản
+                    </a>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Tên đăng nhập</th>
+                                <th>Quyền</th>
+                                <th>Trạng thái</th>
+                                <th class="text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model)
+                            {
+                                <tr>
+                                    <td>@user.TenDangNhap</td>
+                                    <td><span class="badge badge-info">@user.TenVaiTro</span></td>
+                                    <td>
+                                        @if (user.IsActive)
+                                        {
+                                            <span class="badge badge-success">Hoạt động</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">Đã khóa</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("EditUser", "UserManager", new { id = user.UserID, area = "Admin" })" class="btn btn-sm btn-warning">
+                                            <i class="mdi mdi-pencil"></i> Sửa
+                                        </a>
+                                        <form asp-action="Delete" asp-controller="UserManager" asp-area="Admin" asp-route-id="@user.UserID" method="post" style="display:inline" onsubmit="return confirm('Bạn chắc chắn muốn xóa?');">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="mdi mdi-delete"></i> Xóa
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @if (totalPages > 1)
+                {
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            @for (int i = 1; i <= totalPages; i++)
+                            {
+                                <li class="page-item @(i == page ? "active" : "")">
+                                    <a class="page-link" href="?page=@i&search=@search">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,74 @@
+@model AuthDemo.Models.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LayoutEmpty"; // Sử dụng layout trống
+}
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card col-md-4">
+        <div class="card-body">
+            <h2 class="text-center mb-4">Login</h2>
+            
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+            
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="TenDangNhap" class="control-label">Username</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input asp-for="TenDangNhap" class="form-control form-control-lg" placeholder="Type your username" required />
+                    </div>
+                    <span asp-validation-for="TenDangNhap" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="MatKhau" class="control-label">Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        </div>
+                        <input asp-for="MatKhau" type="password" class="form-control form-control-lg" placeholder="Type your password" required />
+                    </div>
+                    <span asp-validation-for="MatKhau" class="text-danger"></span>
+                    <div class="text-end mt-2">
+                        <a href="#" class="forgot-password-link">Forgot password?</a>
+                    </div>
+                </div>
+
+                <div class="form-group d-grid gap-2 mb-4">
+                    <button type="submit" class="btn gradient-button">LOGIN</button>
+                </div>
+            </form>
+
+            <p class="text-center text-muted mb-4">Or Sign Up Using</p>
+            <div class="social-login text-center mb-4">
+                <a href="#" class="btn facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="btn twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="btn google"><i class="fab fa-google-plus-g"></i></a>
+            </div>
+
+            <p class="text-center text-muted mb-4">Or Sign Up Using</p>
+            <div class="text-center">
+                <a asp-action="Register" class="btn btn-link">SIGN UP</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

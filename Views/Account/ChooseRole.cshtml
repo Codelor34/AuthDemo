@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Chọn vai trò";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">Chọn vai trò truy cập</h4>
+                </div>
+                <div class="card-body text-center">
+                    <p>Bạn có cả 2 vai trò <b>Admin</b> và <b>User</b>. Hãy chọn nơi muốn truy cập:</p>
+                    <form method="post">
+                        <button type="submit" name="role" value="admin" class="btn btn-warning mx-2">Vào trang Admin</button>
+                        <button type="submit" name="role" value="user" class="btn btn-primary mx-2">Vào trang Người dùng</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

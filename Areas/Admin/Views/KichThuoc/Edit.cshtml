@@ -1,0 +1,37 @@
+@model AuthDemo.Models.KichThuoc
+@{
+    ViewData["Title"] = "Sửa size";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                <h4 class="mb-0"><i class="mdi mdi-pencil"></i> Sửa size</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" asp-controller="KichThuoc" asp-area="Admin" method="post">
+                    <input type="hidden" asp-for="SizeID" />
+                    <div class="form-group mb-3">
+                        <label asp-for="TenKichThuoc" class="form-label fw-bold">Tên size</label>
+                        <input asp-for="TenKichThuoc" class="form-control rounded-3" placeholder="Nhập tên size..." />
+                        <span asp-validation-for="TenKichThuoc" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="MaKichThuocCode" class="form-label fw-bold">Mã size</label>
+                        <input asp-for="MaKichThuocCode" class="form-control rounded-3" placeholder="Nhập mã size..." />
+                        <span asp-validation-for="MaKichThuocCode" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="mdi mdi-content-save"></i> Lưu
+                        </button>
+                        <a class="btn btn-secondary px-4" href="@Url.Action("Index", "KichThuoc", new { area = "Admin" })">
+                            <i class="mdi mdi-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

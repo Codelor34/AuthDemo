@@ -1,0 +1,76 @@
+@model IEnumerable<AuthDemo.Models.ViewModels.GiayWithSoLuongVM>
+@{
+    ViewData["Title"] = "Danh sách sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="mdi mdi-cube-outline"></i> Danh sách sản phẩm</h4>
+        <a class="btn btn-primary" href="@Url.Action("Create", "Giay", new { area = "Admin" })">
+            <i class="mdi mdi-plus"></i> Thêm sản phẩm
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Mã sản phẩm</th>
+                        <th>Mô tả</th>
+                        <th>Trạng thái</th>
+                        <th>Tổng tồn kho</th>
+                        <th>Người tạo</th>
+                        <th>Ngày tạo</th>
+                        <th>Người cập nhật</th>
+                        <th>Ngày cập nhật</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Giay.TenGiay</td>
+                        <td>@item.Giay.MaGiayCode</td>
+                        <td>@item.Giay.MoTa</td>
+                        <td>@item.Giay.TrangThai</td>
+                        <td>
+                            <span class="badge bg-success">@item.TongSoLuong</span>
+                        </td>
+                        <td>@item.NguoiTao</td>
+                        <td>
+                            @if (item.NgayTao.HasValue)
+                            {
+                                <span class="badge bg-light text-dark px-2 py-1 rounded-2 shadow-sm">
+                                    @item.NgayTao.Value.ToString("HH:mm dd/MM/yyyy")
+                                </span>
+                            }
+                        </td>
+                        <td>@item.NguoiCapNhat</td>
+                        <td>
+                            @if (item.NgayCapNhat.HasValue)
+                            {
+                                <span class="badge bg-light text-dark px-2 py-1 rounded-2 shadow-sm">
+                                    @item.NgayCapNhat.Value.ToString("HH:mm dd/MM/yyyy")
+                                </span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-info btn-sm me-1" href="@Url.Action("Details", "Giay", new { id = item.Giay.ShoeID, area = "Admin" })">
+                                <i class="mdi mdi-eye"></i> Xem
+                            </a>
+                            <a class="btn btn-warning btn-sm me-1" href="@Url.Action("Edit", "Giay", new { id = item.Giay.ShoeID, area = "Admin" })">
+                                <i class="mdi mdi-pencil"></i> Sửa
+                            </a>
+                            <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "Giay", new { id = item.Giay.ShoeID, area = "Admin" })" onclick="return confirm('Bạn có chắc muốn xóa?');">
+                                <i class="mdi mdi-delete"></i> Xóa
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 

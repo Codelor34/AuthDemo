@@ -1,0 +1,54 @@
+@model AuthDemo.Models.ViewModels.GiayFullInfoVM
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="mdi mdi-information-outline"></i> Thông tin sản phẩm</h4>
+            </div>
+            <div class="card-body">
+                <h3>@Model.Giay.TenGiay</h3>
+                <p><b>Danh mục:</b> @Model.TenDanhMuc</p>
+                <p><b>Thương hiệu:</b> @Model.TenThuongHieu</p>
+                <p><b>Chất liệu:</b> @Model.TenChatLieu</p>
+                <p><b>Mã sản phẩm:</b> @Model.Giay.MaGiayCode</p>
+                <p><b>Mô tả:</b> @Model.Giay.MoTa</p>
+                <p><b>Trạng thái:</b> @Model.Giay.TrangThai</p>
+                <p><b>Tổng tồn kho:</b> <span class="badge bg-success">@Model.TongSoLuong</span></p>
+                <hr />
+                <h5 class="mt-4">Các biến thể chi tiết</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Size</th>
+                                <th>Màu sắc</th>
+                                <th>Chất liệu</th>
+                                <th>Số lượng</th>
+                                <th>Giá</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var ct in Model.ChiTietGiays)
+                        {
+                            <tr>
+                                <td>@ct.KichThuoc?.TenKichThuoc</td>
+                                <td>@ct.MauSac?.TenMau</td>
+                                <td>@ct.ChatLieu?.TenChatLieu</td>
+                                <td>@ct.SoLuong</td>
+                                <td>@ct.Gia.ToString("N0")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <a class="btn btn-secondary mt-3" href="@Url.Action("Index", "Giay", new { area = "Admin" })">
+                    <i class="mdi mdi-arrow-left"></i> Quay lại danh sách
+                </a>
+            </div>
+        </div>
+    </div>
+</div> 
