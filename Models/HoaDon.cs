@@ -35,5 +35,7 @@ namespace AuthDemo.Models
         public NguoiDung NguoiDung { get; set; }
         public ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; }
         public ICollection<LichSuHoaDon> LichSuHoaDons { get; set; }
+
+
     }
 } 

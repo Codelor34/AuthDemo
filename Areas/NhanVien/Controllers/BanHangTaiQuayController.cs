@@ -86,5 +86,46 @@ namespace DATN_Lor.Areas.NhanVien.Controllers
             var users = _banHangTaiQuayService.SearchKhachHang(keyword);
             return Json(users);
         }
+        // create khách hàng 
+        [HttpPost]
+        public IActionResult CreateKhachHang(CreateKhachHangVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false, message = "Vui lòng nhập đầy đủ thông tin." });
+            }
+
+            try
+            {
+                var id = _banHangTaiQuayService.CreateKhachHang(model);
+                return Json(new { success = true, userId = id, hoTen = model.HoTen });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        [HttpPost]
+        public JsonResult CreateKhachHang(string hoTen, string soDienThoai, string email, string diaChi)
+        {
+            try
+            {
+                var vm = new CreateKhachHangVM
+                {
+                    HoTen = hoTen,
+                    SDT = soDienThoai,
+                    email = email,
+                    diachi = diaChi
+                };
+
+                var userId = _banHangTaiQuayService.CreateKhachHang(vm);
+                return Json(new { success = true, userId = userId, hoTen = hoTen });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
     }
 } 

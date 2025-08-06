@@ -37,47 +37,51 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @if (cartItems.Any()) {
-                            foreach (var item in cartItems) {
-                                <tr data-cartdetailid="@item.CartDetailID" data-gia-goc="@item.GiaGoc" data-gia-sau-giam="@item.GiaSauGiam" data-so-luong="@item.SoLuong" data-tangkem="@(item.IsTangKem ? "1" : "0")" data-chietkhau-phantram="@item.ChietKhauPhanTram" data-chietkhau-tienmat="@item.ChietKhauTienMat">
-                                    <td class="bhq-cart-product">
-                                        @item.TenSanPham
-                                        <small class="text-muted d-block">@item.MauSac, Size: @item.KichThuoc</small>
-                                    </td>
-                                    <td class="bhq-cart-qty text-center">
-                                        <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post" class="d-inline">
-                                            <input type="hidden" name="shoeDetailId" value="@item.ShoeDetailID" />
-                                            <input type="hidden" name="actionType" value="decrease" />
-                                            <button class="btn btn-outline-secondary btn-sm bhq-btn-qty">-</button>
-                                        </form>
-                                        <span class="mx-2">@item.SoLuong</span>
-                                        <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post" class="d-inline">
-                                            <input type="hidden" name="shoeDetailId" value="@item.ShoeDetailID" />
-                                            <input type="hidden" name="actionType" value="increase" />
-                                            <button class="btn btn-outline-secondary btn-sm bhq-btn-qty">+</button>
-                                        </form>
-                                    </td>
-                                    <td class="bhq-cart-price text-end">
-                                        <span class="fw-bold">@item.GiaGoc.ToString("N0")</span> VNĐ
-                                    </td>
-                                    <!-- Thành tiền sẽ do js xử lý, không render Razor ở đây -->
-                                    <td class="thanh-tien-dong bhq-cart-total text-end fw-bold"></td>
+                            @if (cartItems.Any())
+                            {
+                                foreach (var item in cartItems)
+                                {
+                                    <tr data-cartdetailid="@item.CartDetailID" data-gia-goc="@item.GiaGoc" data-gia-sau-giam="@item.GiaSauGiam" data-so-luong="@item.SoLuong" data-tangkem="@(item.IsTangKem ? "1" : "0")" data-chietkhau-phantram="@item.ChietKhauPhanTram" data-chietkhau-tienmat="@item.ChietKhauTienMat">
+                                        <td class="bhq-cart-product">
+                                            @item.TenSanPham
+                                            <small class="text-muted d-block">@item.MauSac, Size: @item.KichThuoc</small>
+                                        </td>
+                                        <td class="bhq-cart-qty text-center">
+                                            <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post" class="d-inline">
+                                                <input type="hidden" name="shoeDetailId" value="@item.ShoeDetailID" />
+                                                <input type="hidden" name="actionType" value="decrease" />
+                                                <button class="btn btn-outline-secondary btn-sm bhq-btn-qty">-</button>
+                                            </form>
+                                            <span class="mx-2">@item.SoLuong</span>
+                                            <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post" class="d-inline">
+                                                <input type="hidden" name="shoeDetailId" value="@item.ShoeDetailID" />
+                                                <input type="hidden" name="actionType" value="increase" />
+                                                <button class="btn btn-outline-secondary btn-sm bhq-btn-qty">+</button>
+                                            </form>
+                                        </td>
+                                        <td class="bhq-cart-price text-end">
+                                            <span class="fw-bold">@item.GiaGoc.ToString("N0")</span> VNĐ
+                                        </td>
+                                        <!-- Thành tiền sẽ do js xử lý, không render Razor ở đây -->
+                                        <td class="thanh-tien-dong bhq-cart-total text-end fw-bold"></td>
 
-                                    <td class="bhq-cart-reason text-muted small text-center">@item.LyDo</td>
-                                    <td class="bhq-cart-action">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm ms-1 bhq-btn-discount" title="Chiết khấu/Tặng" data-cartid="@item.CartDetailID">🎁 %</button>
-                                    </td>
-                                    
-                                </tr>
+                                        <td class="bhq-cart-reason text-muted small text-center">@item.LyDo</td>
+                                        <td class="bhq-cart-action">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm ms-1 bhq-btn-discount" title="Chiết khấu/Tặng" data-cartid="@item.CartDetailID">🎁 %</button>
+                                        </td>
+
+                                    </tr>
+                                }
                             }
-                        } else {
-                            <tr><td colspan="5" class="text-center text-muted">Chưa có sản phẩm trong giỏ.</td></tr>
-                        }
+                            else
+                            {
+                                <tr><td colspan="5" class="text-center text-muted">Chưa có sản phẩm trong giỏ.</td></tr>
+                            }
                         </tbody>
                     </table>
                 </div>
                 <div class="d-flex justify-content-end mt-2 ">
-                    <strong >Tổng tiền: </strong>
+                    <strong>Tổng tiền: </strong>
                     <span class="text-danger fw-bold ms-2 " id="tong-tien-giohang"></span>
                 </div>
             </div>
@@ -86,44 +90,51 @@
             <div class="card p-3">
                 <div class="fw-bold mb-2">Danh sách sản phẩm</div>
                 <div class="row g-2">
-                @if (!tuVanList.Any()) {
-                    <div class="col-12 text-muted">Không có sản phẩm.</div>
-                } else {
-                    foreach (var sp in tuVanList) {
+                    @if (!tuVanList.Any())
+                    {
+                        <div class="col-12 text-muted">Không có sản phẩm.</div>
+                    }
+                    else
+                    {
+                        foreach (var sp in tuVanList)
+                        {
                             var cartItem = cartItems.FirstOrDefault(x => x.ShoeDetailID == sp.ShoeDetailID);
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                                 <div class="product-card">
-                                <div><strong>@sp.TenSp</strong></div>
+                                    <div><strong>@sp.TenSp</strong></div>
                                     <div class="text-success">@sp.Gia.ToString("N0") VNĐ</div>
-                                <div class="text-muted">Màu: @sp.MauSac | Size: @sp.KichThuoc</div>
-                                <div class="text-muted">@sp.ThuongHieu - @sp.ChatLieu</div>
-                                <div class="text-muted">@sp.DanhMuc</div>
-                                @if (cartItem != null) {
+                                    <div class="text-muted">Màu: @sp.MauSac | Size: @sp.KichThuoc</div>
+                                    <div class="text-muted">@sp.ThuongHieu - @sp.ChatLieu</div>
+                                    <div class="text-muted">@sp.DanhMuc</div>
+                                    @if (cartItem != null)
+                                    {
                                         <div class="mt-2">
                                             <span class="badge bg-primary">Số lượng: @cartItem.SoLuong</span>
-                                        <div class="d-flex gap-1 mt-2 flex-wrap">
-                                            <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post">
-                                                <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
-                                                <input type="hidden" name="actionType" value="decrease" />
-                                                <button class="btn btn-outline-secondary btn-sm">-</button>
-                                            </form>
-                                            <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post">
-                                                <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
-                                                <input type="hidden" name="actionType" value="increase" />
-                                                <button class="btn btn-outline-secondary btn-sm">+</button>
-                                            </form>
-                                            <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post">
-                                                <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
-                                                <input type="hidden" name="actionType" value="remove" />
-                                                <button class="btn btn-outline-danger btn-sm">Xóa</button>
-                                            </form>
+                                            <div class="d-flex gap-1 mt-2 flex-wrap">
+                                                <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post">
+                                                    <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
+                                                    <input type="hidden" name="actionType" value="decrease" />
+                                                    <button class="btn btn-outline-secondary btn-sm">-</button>
+                                                </form>
+                                                <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post">
+                                                    <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
+                                                    <input type="hidden" name="actionType" value="increase" />
+                                                    <button class="btn btn-outline-secondary btn-sm">+</button>
+                                                </form>
+                                                <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post">
+                                                    <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
+                                                    <input type="hidden" name="actionType" value="remove" />
+                                                    <button class="btn btn-outline-danger btn-sm">Xóa</button>
+                                                </form>
+                                            </div>
                                         </div>
-                                    </div>
-                                } else {
+                                    }
+                                    else
+                                    {
                                         <form asp-action="UpdateCart" asp-controller="BanHangTaiQuay" method="post" class="mt-2">
                                             <input type="hidden" name="shoeDetailId" value="@sp.ShoeDetailID" />
                                             <input type="hidden" name="actionType" value="add" />
-                                        <button class="btn btn-outline-primary btn-sm w-100">Chọn</button>
+                                            <button class="btn btn-outline-primary btn-sm w-100">Chọn</button>
                                         </form>
                                     }
                                 </div>
@@ -227,169 +238,247 @@
 
 <!-- Modal chiết khấu/tặng sản phẩm -->
 <div class="modal fade" id="discountModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-bold">Khuyến mại khác</h5>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Khuyến mại khác</h5>
 
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-      </div>
-      <div class="modal-body">
-        <div class="text-danger" style="font-size: 0.95em;">* Nếu để trống sẽ reset lại giảm giá</div>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="checkbox" id="discount-tangkem" />
-          <label class="form-check-label" for="discount-tangkem">Tặng sản phẩm này</label>
-        </div>
-        <label class="form-label mb-1">Khuyến mại theo</label>
-        <div class="btn-group mb-2" role="group">
-            <button type="button" class="btn btn-toggle-type btn-primary" data-type="percent">%</button>
-            <button type="button" class="btn btn-toggle-type btn-outline-primary" data-type="amount">VNĐ</button>
-        </div>
-        <input type="number" class="form-control form-control-sm mb-2" id="discount-value" min="0" value="0" />
-        <label class="form-label mb-1">Đề xuất</label>
-        <div class="btn-group mb-2" role="group">
-            <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="10">10%</button>
-            <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="20">20%</button>
-            <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="30">30%</button>
-            <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="50">50%</button>
-        </div>
-        <label class="form-label mb-1">Lý do khuyến mại <span class="text-danger">*</span></label>
-        <input type="text" class="form-control form-control-sm" id="discount-reason" placeholder="Nhập lý do ..." />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btn-save-discount">Đồng ý</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-danger" style="font-size: 0.95em;">* Nếu để trống sẽ reset lại giảm giá</div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="discount-tangkem" />
+                    <label class="form-check-label" for="discount-tangkem">Tặng sản phẩm này</label>
+                </div>
+                <label class="form-label mb-1">Khuyến mại theo</label>
+                <div class="btn-group mb-2" role="group">
+                    <button type="button" class="btn btn-toggle-type btn-primary" data-type="percent">%</button>
+                    <button type="button" class="btn btn-toggle-type btn-outline-primary" data-type="amount">VNĐ</button>
+                </div>
+                <input type="number" class="form-control form-control-sm mb-2" id="discount-value" min="0" value="0" />
+                <label class="form-label mb-1">Đề xuất</label>
+                <div class="btn-group mb-2" role="group">
+                    <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="10">10%</button>
+                    <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="20">20%</button>
+                    <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="30">30%</button>
+                    <button type="button" class="btn btn-outline-secondary btn-quick-value" data-value="50">50%</button>
+                </div>
+                <label class="form-label mb-1">Lý do khuyến mại <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="discount-reason" placeholder="Nhập lý do ..." />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-save-discount">Đồng ý</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Modal thông tin người nhận -->
-<div class="modal fade" id="nguoinhanModal" tabindex="-1" aria-labelledby="nguoinhanModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="nguoinhanModalLabel">Thông tin người nhận</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row g-2">
-          <div class="col-6">
-            <input id="nguoinhan-ten" name="NguoiNhanTen" type="text" class="form-control" placeholder="Tên người nhận" />
-          </div>
-          <div class="col-6">
-            <input id="nguoinhan-sdt" name="NguoiNhanSDT" type="text" class="form-control" placeholder="SĐT người nhận" />
-          </div>
-          <div class="col-6">
-            <input id="nguoinhan-email" name="NguoiNhanEmail" type="email" class="form-control" placeholder="Email người nhận" />
-          </div>
-          <div class="col-6">
-            <input id="nguoinhan-diachi" name="NguoiNhanDiaChi" type="text" class="form-control" placeholder="Địa chỉ nhận hàng" />
-          </div>
+@* <div class="modal fade" id="nguoinhanModal" tabindex="-1" aria-labelledby="nguoinhanModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nguoinhanModalLabel">Thông tin người nhận</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <input id="nguoinhan-ten" name="NguoiNhanTen" type="text" class="form-control" placeholder="Tên người nhận" />
+                    </div>
+                    <div class="col-6">
+                        <input id="nguoinhan-sdt" name="NguoiNhanSDT" type="text" class="form-control" placeholder="SĐT người nhận" />
+                    </div>
+                    <div class="col-6">
+                        <input id="nguoinhan-email" name="NguoiNhanEmail" type="email" class="form-control" placeholder="Email người nhận" />
+                    </div>
+                    <div class="col-6">
+                        <input id="nguoinhan-diachi" name="NguoiNhanDiaChi" type="text" class="form-control" placeholder="Địa chỉ nhận hàng" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Lưu</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-      </div>
     </div>
-  </div>
+</div> *@
+<div class="modal fade" id="nguoinhanModal" tabindex="-1" aria-labelledby="nguoinhanModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nguoinhanModalLabel">Thông tin người nhận</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <input id="nguoinhan-ten" type="text" class="form-control" placeholder="Tên người nhận *" />
+                    </div>
+                    <div class="col-6">
+                        <input id="nguoinhan-sdt" type="text" class="form-control" placeholder="SĐT người nhận *" />
+                    </div>
+                    <div class="col-6">
+                        <input id="nguoinhan-email" type="email" class="form-control" placeholder="Email người nhận" />
+                    </div>
+                    <div class="col-6">
+                        <input id="nguoinhan-diachi" type="text" class="form-control" placeholder="Địa chỉ nhận hàng" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-save-khachmoi">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal giảm giá hóa đơn -->
 <div class="modal fade" id="giamgiaModal" tabindex="-1" aria-labelledby="giamgiaModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="giamgiaModalLabel">Giảm giá hóa đơn</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-      </div>
-      <div class="modal-body">
-        <div class="text-danger" style="font-size: 0.95em;">* Reset trang sẽ làm mới lại giảm giá</div>
-        <label class="form-label mb-1">Giảm giá theo</label>
-        <div class="btn-group mb-2 w-100" role="group">
-            <button type="button" class="btn btn-toggle-type-giamgia btn-primary w-50" data-type="percent">%</button>
-            <button type="button" class="btn btn-toggle-type-giamgia btn-outline-primary w-50" data-type="amount">VNĐ</button>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="giamgiaModalLabel">Giảm giá hóa đơn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-danger" style="font-size: 0.95em;">* Reset trang sẽ làm mới lại giảm giá</div>
+                <label class="form-label mb-1">Giảm giá theo</label>
+                <div class="btn-group mb-2 w-100" role="group">
+                    <button type="button" class="btn btn-toggle-type-giamgia btn-primary w-50" data-type="percent">%</button>
+                    <button type="button" class="btn btn-toggle-type-giamgia btn-outline-primary w-50" data-type="amount">VNĐ</button>
+                </div>
+                <input type="number" class="form-control form-control-sm mb-2" id="modal-giamgia-value" min="0" value="0" />
+                <label class="form-label mb-1">Đề xuất</label>
+                <div class="btn-group mb-2 w-100" role="group">
+                    <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="10">10%</button>
+                    <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="20">20%</button>
+                    <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="30">30%</button>
+                    <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="50">50%</button>
+                </div>
+                <label class="form-label mb-1">Lý do giảm giá</label>
+                <input type="text" class="form-control form-control-sm" id="modal-lydo-giamgia" placeholder="Nhập lý do ..." />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-save-giamgia">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
         </div>
-        <input type="number" class="form-control form-control-sm mb-2" id="modal-giamgia-value" min="0" value="0" />
-        <label class="form-label mb-1">Đề xuất</label>
-        <div class="btn-group mb-2 w-100" role="group">
-            <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="10">10%</button>
-            <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="20">20%</button>
-            <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="30">30%</button>
-            <button type="button" class="btn btn-outline-secondary btn-quick-value-giamgia" data-value="50">50%</button>
-        </div>
-        <label class="form-label mb-1">Lý do giảm giá</label>
-        <input type="text" class="form-control form-control-sm" id="modal-lydo-giamgia" placeholder="Nhập lý do ..." />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btn-save-giamgia" >Lưu</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-      </div>
     </div>
-  </div>
 </div>
 
+@section Scripts {
+    <script>
+        // Gán route từ Razor
+        const CreateKhachHangUrl = '@Url.Action("CreateKhachHang", "BanHangTaiQuay", new { area = "NhanVien" })';
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- JS xử lý lưu khách hàng -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('btn-save-khachmoi').addEventListener('click', function () {
+                const hoTen = $('#nguoinhan-ten').val().trim();
+                const sdt = $('#nguoinhan-sdt').val().trim();
+                const email = $('#nguoinhan-email').val().trim();
+                const diaChi = $('#nguoinhan-diachi').val().trim();
+
+                if (!hoTen || !sdt) {
+                    alert('Vui lòng nhập đầy đủ họ tên và số điện thoại.');
+                    return;
+                }
+
+                $.post(CreateKhachHangUrl, {
+                    hoTen: hoTen,
+                    soDienThoai: sdt,
+                    email: email,
+                    diaChi: diaChi
+                }, function (res) {
+                    if (res.success) {
+                        $('#selected-khachhang-id').val(res.userId);
+                        $('#search-khachhang').val(`${res.hoTen} - ${sdt}`);
+
+                        const modalEl = document.getElementById('nguoinhanModal');
+                        const modal = bootstrap.Modal.getInstance(modalEl);
+                        if (modal) modal.hide();
+
+                        $('#nguoinhan-ten, #nguoinhan-sdt, #nguoinhan-email, #nguoinhan-diachi').val('');
+                    } else {
+                        alert(res.message || "Không thể tạo khách hàng.");
+                    }
+                }).fail(function (xhr, status, error) {
+                    console.error("Lỗi khi gọi API:", error);
+                    alert("Không gọi được API.");
+                });
+            });
+        });
+    </script>
+}
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="module" src="~/js/banhangtaiquay.js"></script>
     <!-- Thư viện Select2 cho select đẹp + icon -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('#phuongthuc-thanh-toan').select2({
-        width: '100%',
-        templateResult: function (state) {
-            if (!state.id) return state.text;
-            let icon = '';
-            switch (parseInt(state.id)) {
-                case 0: icon = '<i class="mdi mdi-cash me-1"></i>'; break; // Tiền mặt
-                case 1: icon = '<i class="mdi mdi-bank-transfer me-1"></i>'; break; // Chuyển khoản
-                case 2: icon = '<i class="mdi mdi-credit-card me-1"></i>'; break; // Thẻ tín dụng
-                case 3: icon = '<i class="mdi mdi-cellphone me-1"></i>'; break; // Ví điện tử
-            }
-            return $('<span>' + icon + state.text + '</span>');
-        },
-        templateSelection: function (state) {
-            if (!state.id) return state.text;
-            let icon = '';
-            switch (parseInt(state.id)) {
-                case 0: icon = '<i class="mdi mdi-cash me-1"></i>'; break;
-                case 1: icon = '<i class="mdi mdi-bank-transfer me-1"></i>'; break;
-                case 2: icon = '<i class="mdi mdi-credit-card me-1"></i>'; break;
-                case 3: icon = '<i class="mdi mdi-cellphone me-1"></i>'; break;
-            }
-            return $('<span>' + icon + state.text + '</span>');
-        },
-        escapeMarkup: function (m) { return m; }
-    });
-    $('#phuongthuc-van-chuyen').select2({
-        width: '100%',
-        templateResult: function (state) {
-            if (!state.id) return state.text;
-            let icon = '';
-            switch (parseInt(state.id)) {
-                case 0: icon = '<i class="mdi mdi-truck-fast me-1"></i>'; break; // Giao hàng nhanh
-                case 1: icon = '<i class="mdi mdi-package-variant me-1"></i>'; break; // Giao hàng tiết kiệm
-                case 2: icon = '<i class="mdi mdi-store me-1"></i>'; break; // Tự đến lấy
-            }
-            return $('<span>' + icon + state.text + '</span>');
-        },
-        templateSelection: function (state) {
-            if (!state.id) return state.text;
-            let icon = '';
-            switch (parseInt(state.id)) {
-                case 0: icon = '<i class="mdi mdi-truck-fast me-1"></i>'; break;
-                case 1: icon = '<i class="mdi mdi-package-variant me-1"></i>'; break;
-                case 2: icon = '<i class="mdi mdi-store me-1"></i>'; break;
-            }
-            return $('<span>' + icon + state.text + '</span>');
-        },
-        escapeMarkup: function (m) { return m; }
-    });
-});
-</script>
+    <script>
+        $(document).ready(function() {
+            $('#phuongthuc-thanh-toan').select2({
+                width: '100%',
+                templateResult: function (state) {
+                    if (!state.id) return state.text;
+                    let icon = '';
+                    switch (parseInt(state.id)) {
+                        case 0: icon = '<i class="mdi mdi-cash me-1"></i>'; break; // Tiền mặt
+                        case 1: icon = '<i class="mdi mdi-bank-transfer me-1"></i>'; break; // Chuyển khoản
+                        case 2: icon = '<i class="mdi mdi-credit-card me-1"></i>'; break; // Thẻ tín dụng
+                        case 3: icon = '<i class="mdi mdi-cellphone me-1"></i>'; break; // Ví điện tử
+                    }
+                    return $('<span>' + icon + state.text + '</span>');
+                },
+                templateSelection: function (state) {
+                    if (!state.id) return state.text;
+                    let icon = '';
+                    switch (parseInt(state.id)) {
+                        case 0: icon = '<i class="mdi mdi-cash me-1"></i>'; break;
+                        case 1: icon = '<i class="mdi mdi-bank-transfer me-1"></i>'; break;
+                        case 2: icon = '<i class="mdi mdi-credit-card me-1"></i>'; break;
+                        case 3: icon = '<i class="mdi mdi-cellphone me-1"></i>'; break;
+                    }
+                    return $('<span>' + icon + state.text + '</span>');
+                },
+                escapeMarkup: function (m) { return m; }
+            });
+            $('#phuongthuc-van-chuyen').select2({
+                width: '100%',
+                templateResult: function (state) {
+                    if (!state.id) return state.text;
+                    let icon = '';
+                    switch (parseInt(state.id)) {
+                        case 0: icon = '<i class="mdi mdi-truck-fast me-1"></i>'; break; // Giao hàng nhanh
+                        case 1: icon = '<i class="mdi mdi-package-variant me-1"></i>'; break; // Giao hàng tiết kiệm
+                        case 2: icon = '<i class="mdi mdi-store me-1"></i>'; break; // Tự đến lấy
+                    }
+                    return $('<span>' + icon + state.text + '</span>');
+                },
+                templateSelection: function (state) {
+                    if (!state.id) return state.text;
+                    let icon = '';
+                    switch (parseInt(state.id)) {
+                        case 0: icon = '<i class="mdi mdi-truck-fast me-1"></i>'; break;
+                        case 1: icon = '<i class="mdi mdi-package-variant me-1"></i>'; break;
+                        case 2: icon = '<i class="mdi mdi-store me-1"></i>'; break;
+                    }
+                    return $('<span>' + icon + state.text + '</span>');
+                },
+                escapeMarkup: function (m) { return m; }
+            });
+        });                  
+    </script>
 }
 
 <link rel="stylesheet" href="~/css/banhangtaiquay.css" />

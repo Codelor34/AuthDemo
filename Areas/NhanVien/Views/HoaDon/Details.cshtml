@@ -1,0 +1,67 @@
+﻿@model AuthDemo.Models.ViewModels.GetAllHoaDonVM
+
+@{
+    ViewData["Title"] = "Chi tiết hóa đơn";
+    Layout = "~/Areas/NhanVien/Views/Shared/_LayoutNhanVien.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-dark mb-0">🧾 HÓA ĐƠN</h3>
+                <span class="badge bg-primary fs-6">#@Model.HoaDonID.ToString().Substring(0, 36).ToUpper()</span>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5 class="fw-bold">Khách hàng</h5>
+                    <p class="mb-1"><strong>Họ tên:</strong> @Model.TenKhachHang</p>
+                    <p class="mb-1"><strong>SĐT:</strong> @Model.SoDienThoai</p>
+                    <p class="mb-1"><strong>Email:</strong> @Model.Email</p>
+                    <p class="mb-1"><strong>Địa chỉ:</strong> @Model.DiaChi</p>
+                </div>
+                <div class="col-md-6 text-md-end mt-4 mt-md-0">
+                    <h5 class="fw-bold">Thông tin hóa đơn</h5>
+                    <p class="mb-1"><strong>Ngày tạo:</strong> @Model.NgayTao?.ToString("dd/MM/yyyy HH:mm")</p>
+                    @{
+                        string badgeClass = Model.TrangThaiDisplay.ToLower() switch
+                        {
+                            "đã xác nhận" => "bg-success text-white",       // Xanh lá đậm
+                            "đã hủy" => "badge bg-danger", 
+                                "đã thanh toán" => "bg-success text-white",     // Xanh lá đậm
+                            _ => "bg-primary text-white"                    // Xanh dương cho các trạng thái còn lại
+                        };
+                    }
+                    <p class="mb-1">
+                        <strong>Trạng thái:</strong>
+                        <span class="badge @badgeClass">@Model.TrangThaiDisplay</span>
+                    </p>
+
+
+                    @* <p class="mb-1"><strong>Trạng thái:</strong> <span class="badge bg-secondary">@Model.TrangThaiDisplay</span></p> *@
+                    <p class="mb-1"><strong>Thanh toán:</strong> @Model.HinhThucThanhToanDisplay</p>
+                    <p class="mb-1"><strong>Vận chuyển:</strong> @Model.HinhThucVanChuyenDisplay</p>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Người tạo:</strong> @Model.NguoiTao</p>
+                    <p><strong>Người cập nhật:</strong> @Model.NguoiCapNhat</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h4 class="text-success">Tổng tiền: <span class="fw-bold">@Model.TongTien.ToString("N0") ₫</span></h4>
+                </div>
+            </div>
+
+            <div class="text-end mt-4">
+                <a asp-action="Index" asp-area="NhanVien" class="btn btn-outline-dark">
+                    ← Quay lại danh sách
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

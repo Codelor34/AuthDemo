@@ -6,8 +6,9 @@ using AuthDemo.Models.ViewModels;
 using AuthDemo.Areas.Admin.Interface;
 using Microsoft.EntityFrameworkCore;
 using AuthDemo.Models;
+using AuthDemo.Models.Enums;
 
-namespace AuthDemo.Areas.NhanVien.Services
+namespace AuthDemo.Areas.Nhanvien.Services
 {
     public class BanHangTaiQuayService : IBanHangTaiQuayService
     {
@@ -93,6 +94,55 @@ namespace AuthDemo.Areas.NhanVien.Services
                 .ToList();
 
             return users;
+        }
+        // tạo khách hàng
+        public Guid CreateKhachHang (CreateKhachHangVM model)
+        {
+            // tên đăng nhập là KH+SĐT
+            var userID = Guid.NewGuid();
+            string Autousername = "KH" + model.SDT;
+            // 6 số đầu sđt là password
+            string AutoPass = model.SDT.Length >= 6
+    ? model.SDT.Substring(0, 6)
+    : model.SDT;
+            if (_db.NguoiDungs.Any(x => x.TenDangNhap == "KH" + model.SDT))
+                throw new Exception("Khách hàng với số điện thoại này đã tồn tại.");
+
+            var NguoiDung = new NguoiDung
+            {
+                UserID = userID,
+                HoTen = model.HoTen,
+                TenDangNhap = Autousername,
+                MatKhau = AutoPass,
+                SoDienThoai = model.SDT,
+                Email = model.email,
+                IsActive = true
+            };
+            _db.NguoiDungs.Add(NguoiDung);
+            var roleuser = _db.VaiTros.FirstOrDefault(v => v.TenVaiTro == "user");
+            if (roleuser != null)
+            {
+                _db.VaiTroNguoiDungs.Add(new VaiTroNguoiDung
+                {
+                    UserID = userID,
+                    RoleID = roleuser.RoleID
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.diachi))
+            {
+                _db.DiaChis.Add(new DiaChi
+                {
+                    AddressID = Guid.NewGuid(),
+                    UserID = userID,
+                    DiaChiDayDu = model.diachi
+                });
+            }
+
+            _db.SaveChanges();
+            return userID;
+
+
         }
 
         public List<CartItemDisplayVM> GetCartItems(string tenDangNhap)
@@ -200,6 +250,87 @@ namespace AuthDemo.Areas.NhanVien.Services
             cartItem.IsTangKem = isTangKem;
             cartItem.LyDo = reason;
             _db.ChiTietGioHangs.Update(cartItem);
+            _db.SaveChanges();
+        }
+
+        public void ThanhToan(string tenDangNhap, Guid userId, PhuongThucThanhToan phuongThucTT, PhuongThucVanChuyen phuongThucVC, string ghiChu, decimal? giamGiaPhanTram, decimal? giamGiaTienMat, string? lyDoGiamGia)
+        {
+            var nhanVien = _db.NguoiDungs.FirstOrDefault(u => u.TenDangNhap == tenDangNhap);
+            if (nhanVien == null) return;
+
+            var user = _db.NguoiDungs.Include(x => x.DiaChis).FirstOrDefault(u => u.UserID == userId);
+            if (user == null) return;
+
+            var cart = _db.GioHangs.FirstOrDefault(g => g.UserID == user.UserID);
+            if (cart == null) return;
+
+            var cartItems = _db.ChiTietGioHangs
+                .Where(c => c.CartID == cart.CartID)
+                .ToList();
+
+            if (cartItems.Count == 0) return;
+
+            decimal tongTien = 0;
+            var hoaDon = new HoaDon
+            {
+                BillID = Guid.NewGuid(),
+                UserID = user.UserID,
+                HoTen = user.HoTen,
+                Email = user.Email,
+                SoDienThoai = user.SoDienThoai,
+                DiaChi = user.DiaChis.FirstOrDefault()?.DiaChiDayDu ?? "",
+                DaThanhToan = true,
+                TrangThai = TrangThaiHoaDon.ChoXacNhan,
+                PhuongThucThanhToan = phuongThucTT,
+                PhuongThucVanChuyen = phuongThucVC,
+                GhiChu = ghiChu,
+                GiamGiaPhanTram = giamGiaPhanTram,
+                GiamGiaTienMat = giamGiaTienMat,
+                LyDoGiamGia = lyDoGiamGia,
+                NguoiTao = nhanVien.HoTen,
+                NgayTao = DateTime.Now
+            };
+
+            hoaDon.ChiTietHoaDons = new List<ChiTietHoaDon>();
+
+            foreach (var item in cartItems)
+            {
+                var ct = new ChiTietHoaDon
+                {
+                    BillDetailID = Guid.NewGuid(),
+                    BillID = hoaDon.BillID,
+                    ShoeDetailID = item.ShoeDetailID,
+                    SoLuong = item.SoLuong,
+                    DonGia = item.ChiTietGiay?.Gia ?? 0,
+                    ChietKhauPhanTram = item.ChietKhauPhanTram,
+                    ChietKhauTienMat = item.ChietKhauTienMat,
+                    IsTangKem = item.IsTangKem,
+                    NguoiTao = nhanVien.HoTen,
+                    NgayTao = DateTime.Now
+                };
+                decimal thanhTien = ct.DonGia * ct.SoLuong;
+                if (ct.IsTangKem != true)
+                {
+                    thanhTien -= (thanhTien * (ct.ChietKhauPhanTram ?? 0) / 100) + (ct.ChietKhauTienMat ?? 0);
+                }
+                tongTien += Math.Max(0, thanhTien);
+                hoaDon.ChiTietHoaDons.Add(ct);
+            }
+
+            // Áp dụng giảm giá toàn hóa đơn
+            if (giamGiaPhanTram.HasValue)
+                tongTien -= tongTien * giamGiaPhanTram.Value / 100;
+            if (giamGiaTienMat.HasValue)
+                tongTien -= giamGiaTienMat.Value;
+
+            hoaDon.TongTien = Math.Max(0, tongTien);
+            hoaDon.NguoiCapNhat = nhanVien.HoTen;
+            hoaDon.NgayCapNhat = DateTime.Now;
+
+            _db.HoaDons.Add(hoaDon);
+
+            // Xóa giỏ hàng
+            _db.ChiTietGioHangs.RemoveRange(cartItems);
             _db.SaveChanges();
         }
     }

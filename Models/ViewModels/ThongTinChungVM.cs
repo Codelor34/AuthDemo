@@ -11,5 +11,7 @@ namespace AuthDemo.Models.ViewModels
         [StringLength(50)]
         public string ?NguoiCapNhat { get; set; }
         public DateTime? NgayCapNhat { get; set; }
+ 
+        
     }
 } 

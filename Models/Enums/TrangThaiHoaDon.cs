@@ -22,7 +22,8 @@ namespace AuthDemo.Models.Enums
         DaHuy = 4,
 
         [Display(Name = "Đã thanh toán")]
-        DaThanhToan = 5
+        DaThanhToan = 5,
+        
     }
 
     

@@ -21,6 +21,9 @@ namespace AuthDemo.Models.ViewModels
         // Thêm các trường display
         public string TrangThaiDisplay { get; set; }
         public string HinhThucThanhToanDisplay { get; set; }
+
         public string HinhThucVanChuyenDisplay { get; set; }
+        public decimal? GiamGiaPhanTram { get; set; }
+        public decimal? GiamGiaTienMat { get; set; }        
     }
 }

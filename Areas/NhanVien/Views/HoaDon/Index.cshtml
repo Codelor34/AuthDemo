@@ -34,13 +34,28 @@
                 <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    <tr class="hoa-don-row" data-id="@item.HoaDonID">
                         <td>@item.HoaDonID</td>
                         <td>@item.TenKhachHang</td>
                         <td>@item.SoDienThoai</td>
                         <td>@item.Email</td>
                         <td>@item.DiaChi</td>
-                        <td><span class="badge bg-info">@item.TrangThaiDisplay</span></td>
+                            <td>
+                                @if (item.TrangThaiDisplay == "Đã xác nhận" || item.TrangThaiDisplay == "Đã thanh toán")
+                                {
+                                    <span class="badge bg-success">@item.TrangThaiDisplay</span>
+                                }
+                                else if (item.TrangThaiDisplay == "Đã hủy")
+                                {
+                                    <span class="badge bg-danger">@item.TrangThaiDisplay</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary">@item.TrangThaiDisplay</span>
+                                }
+                            </td>
+
+                        @* <td><span class="badge bg-info">@item.TrangThaiDisplay</span></td> *@
                         <td>@item.HinhThucThanhToanDisplay</td>
                         <td>@item.HinhThucVanChuyenDisplay</td>
                         <td><span class="badge bg-success">@item.TongTien.ToString("N0")</span></td>
@@ -62,10 +77,10 @@
                                 </span>
                             }
                         </td>
-                        <td class="text-center">
-                            <a class="btn btn-info btn-sm me-1" href="#">
-                                <i class="mdi mdi-eye"></i> Xem                        
-                        </td>
+                            <td class="text-center">
+                                <a class="btn btn-info btn-sm me-1" href="@Url.Action("Details", "HoaDon", new { id = item.HoaDonID, area = "NhanVien" })">
+                                    <i class="mdi mdi-eye"></i> Xem
+                                </a>
                     </tr>
                 }
                 </tbody>
@@ -73,3 +88,18 @@
         </div>
     </div>
 </div> 
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = document.querySelectorAll(".hoa-don-row");
+            rows.forEach(row => {
+                row.addEventListener("dblclick", function () {
+                    const id = row.getAttribute("data-id");
+                    if (id) {
+                        window.location.href = `/NhanVien/HoaDon/Details/${id}`;
+                    }
+                });
+            });
+        });
+    </script>
+}
