@@ -98,15 +98,17 @@ namespace DATN_Lor.Areas.NhanVien.Controllers
             try
             {
                 var id = _banHangTaiQuayService.CreateKhachHang(model);
-                return Json(new { success = true, userId = id, hoTen = model.HoTen });
+                
+                return Json(new { success = true, userId = id, hoTen = model.HoTen, });
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
             }
+            
         }
         [HttpPost]
-        public JsonResult CreateKhachHang(string hoTen, string soDienThoai, string email, string diaChi)
+        public JsonResult CreateKhachHangJson(string hoTen, string soDienThoai, string email, string diaChi)
         {
             try
             {

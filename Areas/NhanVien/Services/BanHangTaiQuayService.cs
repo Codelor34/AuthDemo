@@ -100,7 +100,12 @@ namespace AuthDemo.Areas.Nhanvien.Services
         {
             // tên đăng nhập là KH+SĐT
             var userID = Guid.NewGuid();
+            if (string.IsNullOrWhiteSpace(model.SDT))
+                throw new Exception("Số điện thoại trống!");
+
             string Autousername = "KH" + model.SDT;
+            if (model.SDT.Length < 10)
+                throw new Exception("Số điện thoại không đúng định dạng");
             // 6 số đầu sđt là password
             string AutoPass = model.SDT.Length >= 6
     ? model.SDT.Substring(0, 6)
@@ -120,7 +125,8 @@ namespace AuthDemo.Areas.Nhanvien.Services
             };
             _db.NguoiDungs.Add(NguoiDung);
             var roleuser = _db.VaiTros.FirstOrDefault(v => v.TenVaiTro == "user");
-            if (roleuser != null)
+            if (roleuser == null)
+                throw new Exception("Không tìm thấy vai trò user trong DB");
             {
                 _db.VaiTroNguoiDungs.Add(new VaiTroNguoiDung
                 {
@@ -128,17 +134,6 @@ namespace AuthDemo.Areas.Nhanvien.Services
                     RoleID = roleuser.RoleID
                 });
             }
-
-            if (!string.IsNullOrWhiteSpace(model.diachi))
-            {
-                _db.DiaChis.Add(new DiaChi
-                {
-                    AddressID = Guid.NewGuid(),
-                    UserID = userID,
-                    DiaChiDayDu = model.diachi
-                });
-            }
-
             _db.SaveChanges();
             return userID;
 

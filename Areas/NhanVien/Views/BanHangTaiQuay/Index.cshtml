@@ -157,7 +157,7 @@
                     </div>
                     <div class="mb-2">
                         <div class="d-flex align-items-center justify-content-between">
-                            <span id="nguoinhan-summary" class="text-primary" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#nguoinhanModal">
+                            <span id="nguoinhan-summary" class="text-primary" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#nguoinhanModal"onclick="fillKhachHangDaChon">
                                 <i class="mdi mdi-account-card-details"></i> Thông tin người nhận <span class="text-muted small">(bấm để xem/sửa)</span>
                             </span>
                         </div>
@@ -275,37 +275,6 @@
     </div>
 </div>
 
-<!-- Modal thông tin người nhận -->
-@* <div class="modal fade" id="nguoinhanModal" tabindex="-1" aria-labelledby="nguoinhanModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="nguoinhanModalLabel">Thông tin người nhận</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-2">
-                    <div class="col-6">
-                        <input id="nguoinhan-ten" name="NguoiNhanTen" type="text" class="form-control" placeholder="Tên người nhận" />
-                    </div>
-                    <div class="col-6">
-                        <input id="nguoinhan-sdt" name="NguoiNhanSDT" type="text" class="form-control" placeholder="SĐT người nhận" />
-                    </div>
-                    <div class="col-6">
-                        <input id="nguoinhan-email" name="NguoiNhanEmail" type="email" class="form-control" placeholder="Email người nhận" />
-                    </div>
-                    <div class="col-6">
-                        <input id="nguoinhan-diachi" name="NguoiNhanDiaChi" type="text" class="form-control" placeholder="Địa chỉ nhận hàng" />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Lưu</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div> *@
 <div class="modal fade" id="nguoinhanModal" tabindex="-1" aria-labelledby="nguoinhanModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -316,16 +285,16 @@
             <div class="modal-body">
                 <div class="row g-2">
                     <div class="col-6">
-                        <input id="nguoinhan-ten" type="text" class="form-control" placeholder="Tên người nhận *" />
+                        <input id="nguoinhan-HoTen" type="text" class="form-control" placeholder="Tên người nhận *" />
                     </div>
                     <div class="col-6">
-                        <input id="nguoinhan-sdt" type="text" class="form-control" placeholder="SĐT người nhận *" />
+                        <input id="nguoinhan-SDT" type="text" class="form-control" placeholder="SĐT người nhận *" />
                     </div>
                     <div class="col-6">
-                        <input id="nguoinhan-email" type="email" class="form-control" placeholder="Email người nhận" />
+                        <input id="nguoinhan-Email" type="email" class="form-control" placeholder="Email người nhận" />
                     </div>
                     <div class="col-6">
-                        <input id="nguoinhan-diachi" type="text" class="form-control" placeholder="Địa chỉ nhận hàng" />
+                        <input id="nguoinhan-DiaChi" type="text" class="form-control" placeholder="Địa chỉ nhận hàng" />
                     </div>
                 </div>
             </div>
@@ -341,9 +310,11 @@
 <div class="modal fade" id="giamgiaModal" tabindex="-1" aria-labelledby="giamgiaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+
             <div class="modal-header">
                 <h5 class="modal-title" id="giamgiaModalLabel">Giảm giá hóa đơn</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+
             </div>
             <div class="modal-body">
                 <div class="text-danger" style="font-size: 0.95em;">* Reset trang sẽ làm mới lại giảm giá</div>
@@ -372,6 +343,11 @@
 </div>
 
 @section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module" src="~/js/banhangtaiquay.js"></script>
+    <!-- Thư viện Select2 cho select đẹp + icon -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         // Gán route từ Razor
         const CreateKhachHangUrl = '@Url.Action("CreateKhachHang", "BanHangTaiQuay", new { area = "NhanVien" })';
@@ -383,34 +359,43 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('btn-save-khachmoi').addEventListener('click', function () {
-                const hoTen = $('#nguoinhan-ten').val().trim();
-                const sdt = $('#nguoinhan-sdt').val().trim();
-                const email = $('#nguoinhan-email').val().trim();
-                const diaChi = $('#nguoinhan-diachi').val().trim();
+                const HoTen = $('#nguoinhan-HoTen').val().trim();
+                const sdt = $('#nguoinhan-SDT').val().trim();
+                const Email = $('#nguoinhan-Email').val().trim();
+                const DiaChi = $('#nguoinhan-DiaChi').val().trim();
 
-                if (!hoTen || !sdt) {
+                if (!HoTen || !sdt) {
                     alert('Vui lòng nhập đầy đủ họ tên và số điện thoại.');
                     return;
                 }
 
                 $.post(CreateKhachHangUrl, {
-                    hoTen: hoTen,
-                    soDienThoai: sdt,
-                    email: email,
-                    diaChi: diaChi
-                }, function (res) {
-                    if (res.success) {
-                        $('#selected-khachhang-id').val(res.userId);
-                        $('#search-khachhang').val(`${res.hoTen} - ${sdt}`);
+                    HoTen: HoTen,
+                    SDT: sdt,
+                    Email: Email,
+                    DiaChi: DiaChi
+                    }, function (res) {
+        if (res.success) {
+            $('#selected-khachhang-id').val(res.userId);
+            $('#search-khachhang').val(`${res.hoTen} - ${sdt}`);
 
-                        const modalEl = document.getElementById('nguoinhanModal');
-                        const modal = bootstrap.Modal.getInstance(modalEl);
-                        if (modal) modal.hide();
+            // ✅ Sửa đoạn này ↓↓↓
+            const modalEl = document.getElementById('nguoinhanModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) {
+                modal.hide();
 
-                        $('#nguoinhan-ten, #nguoinhan-sdt, #nguoinhan-email, #nguoinhan-diachi').val('');
-                    } else {
-                        alert(res.message || "Không thể tạo khách hàng.");
-                    }
+                //✅ Thêm đoạn fix dưới đây để đảm bảo trang không bị khóa
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open');
+                $('body').css('padding-right', '');
+            }
+
+            //✅ Xóa dữ liệu trong form
+            $('#nguoinhan-HoTen, #nguoinhan-SDT, #nguoinhan-Email, #nguoinhan-DiaChi').val('');
+        } else {
+            alert(res.message || "Không thể tạo khách hàng.");
+        }
                 }).fail(function (xhr, status, error) {
                     console.error("Lỗi khi gọi API:", error);
                     alert("Không gọi được API.");
@@ -418,13 +403,17 @@
             });
         });
     </script>
-}
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="module" src="~/js/banhangtaiquay.js"></script>
-    <!-- Thư viện Select2 cho select đẹp + icon -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        function fillKhachHangDaChon() {
+            const fullText = document.getElementById('search-khachhang').value;
+            if (!fullText.includes(" - ")) return;
+            const [hoTen, sdt] = fullText.split(" - ");
+            document.getElementById('nguoinhan-HoTen').value = hoTen.trim();
+            document.getElementById('nguoinhan-SDT').value = sdt.trim();
+        }
+    </script>
+
+
     <script>
         $(document).ready(function() {
             $('#phuongthuc-thanh-toan').select2({
@@ -441,7 +430,8 @@
                     return $('<span>' + icon + state.text + '</span>');
                 },
                 templateSelection: function (state) {
-                    if (!state.id) return state.text;
+                    if (!state.id) return state.
+                    ;
                     let icon = '';
                     switch (parseInt(state.id)) {
                         case 0: icon = '<i class="mdi mdi-cash me-1"></i>'; break;

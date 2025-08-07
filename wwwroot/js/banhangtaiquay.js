@@ -27,6 +27,8 @@ $(document).ready(function () {
             $('#dropdown-khachhang').removeClass('show').empty();
         }
     });
+    // thêm lại khách hàng
+    
 
     // Giỏ hàng
     tinhThanhTienDong();

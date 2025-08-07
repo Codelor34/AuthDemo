@@ -19,5 +19,11 @@ namespace AuthDemo.Areas.NhanVien.Controllers
             var hoaDons = _hoaDonService.GetAllHoaDon();
             return View(hoaDons);
         }
+        public IActionResult Details(Guid id)
+        {
+            var hoaDonVM = _hoaDonService.GetHoaDonByID(id);
+            if (hoaDonVM == null) return NotFound();
+            return View(hoaDonVM); // View dùng GetAllHoaDonVM
+        }
     }
 } 

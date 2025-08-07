@@ -3,6 +3,7 @@ using AuthDemo.Data;
 using AuthDemo.Areas.Admin.Interface;
 using AuthDemo.Areas.Admin.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
